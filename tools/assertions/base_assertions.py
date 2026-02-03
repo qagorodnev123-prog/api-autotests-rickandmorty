@@ -4,9 +4,13 @@ from collections import Counter
 
 import allure
 
+from tools.logger import get_logger
+
+logger = get_logger("BASE_ASSERTIONS")
 
 @allure.step("Check that response status code equals to {expected}")
 def assertion_status_code(actual: int, expected: int):
+    logger.info(f'Check that response status code equals to {expected}')
     assert actual == expected, (
         f"Incorrect status",
         f"Expected status-code: {expected}"
@@ -16,6 +20,7 @@ def assertion_status_code(actual: int, expected: int):
 
 @allure.step("Check that {name} equals to {expected}")
 def assert_equal(actual: Any, expected: Any, name: str):
+    logger.info(f'Check that "{name}" equals to {expected}')
     assert actual == expected, (
         f"Incorrect value: {name}"
         f"Actual value: {actual}"
@@ -26,17 +31,20 @@ def assert_equal(actual: Any, expected: Any, name: str):
 @allure.step("Check that sending request on {url} is possible")
 def get_request(url, client):
     response = client.get(str(url))
+    logger.info(f'Check that sending request on {url} is possible')
     assert response.status_code == HTTPStatus.OK, (
         f"URL {url} недоступен. Статус код: {response.status_code}")
 
 
 @allure.step("Check getting an error 404")
 def check_not_found(response: Any, error_msg: str):
+    logger.info("Check getting an error 404")
     assert_equal(response.error, error_msg, "error")
 
 
 @allure.step("Check ids in response and request")
 def check_ids_multiple(response: Any, ids: Any):
+    logger.info("Check ids in response and request")
     if isinstance(ids, (list, tuple)):
         ids = list(ids)
     else:
@@ -52,6 +60,7 @@ def check_ids_multiple(response: Any, ids: Any):
 
 @allure.step("Check that we get entities by filters")
 def check_query_in_response(query: Any, response: Any):
+    logger.info("Check that we get entities by filters")
     query_dict = query.model_dump(exclude_none=True)
     for k,v in query_dict.items():
         for i in response.results:
@@ -65,6 +74,7 @@ def check_query_in_response(query: Any, response: Any):
 
 @allure.step("Check that every id is unique")
 def check_unique_id(list_ids: Any):
+    logger.info("Check that every id is unique")
     ids = [i.id for i in list_ids.results]
     counts = Counter(ids)
     duplicates = [item for item, count in counts.items() if count > 1]

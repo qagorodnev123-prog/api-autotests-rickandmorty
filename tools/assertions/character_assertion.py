@@ -5,9 +5,13 @@ from clients.character.character_schema import GetAllCharactersResponseSchema, G
 from constants.character_constatns import Genders, Status
 from tools.assertions.base_assertions import get_request, assert_equal
 
+from tools.logger import get_logger
+
+logger = get_logger("CHARACTER_ASSERTIONS")
 
 @allure.step("Check that gender is correct")
 def check_correct_genders(list_ids: GetAllCharactersResponseSchema):
+    logger.info("Check that gender is correct")
     for g in list_ids.results:
         gender = g.gender.lower()
         assert gender in Genders, (
@@ -18,6 +22,7 @@ def check_correct_genders(list_ids: GetAllCharactersResponseSchema):
 
 @allure.step("Check that status is correct")
 def check_correct_status(list_ids: GetAllCharactersResponseSchema):
+    logger.info("Check that status is correct")
     for s in list_ids.results:
         status_life = s.status.lower()
         assert status_life in Status, (
@@ -28,6 +33,7 @@ def check_correct_status(list_ids: GetAllCharactersResponseSchema):
 
 @allure.step("Check that urls in response work")
 def check_urls(list_ids: GetCharacterResponseSchema, client: CharacterClient):
+    logger.info("Check that urls in response work")
     location_url = list_ids.location.url
     origin_url = list_ids.origin.url
     if location_url:
@@ -42,5 +48,6 @@ def check_urls(list_ids: GetCharacterResponseSchema, client: CharacterClient):
 
 @allure.step("Check that character id in response the same id in request")
 def check_char_id_response(response: int, character_id: int):
+    logger.info("Check that character id in response the same id in request")
     assert_equal(response, character_id, "id")
 
