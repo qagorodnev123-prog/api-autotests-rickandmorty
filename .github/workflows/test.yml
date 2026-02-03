@@ -29,5 +29,7 @@ jobs:
       - name: Run API tests
         env:
           BASE_URL: "https://rickandmortyapi.com/api"
+          HTTP_CLIENT__URL: "https://rickandmortyapi.com/api"
+          HTTP_CLIENT__TIMEOUT: "15"
         run: pytest tests/
 
