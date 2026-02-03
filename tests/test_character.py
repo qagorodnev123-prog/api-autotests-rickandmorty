@@ -74,6 +74,7 @@ class TestCharacter:
     @pytest.mark.parametrize("ids", [[1,2,3], (1,2,3)])
     def test_get_multiple_characters(self, character_client, ids):
         response = character_client.get_multiple_characters(ids)
+        print(response.text)
         response_data = GetMultipleCharactersResponseSchema.model_validate_json(response.text)
 
         assertion_status_code(response.status_code, HTTPStatus.OK)
@@ -95,6 +96,7 @@ class TestCharacter:
     def test_get_all_characters_with_wrong_params(self, character_client, query_params):
         query = QueryParamsGetAllCharactersRequestSchema(**query_params)
         response = character_client.get_all_characters(query)
+        print(response.text)
         response_data = NotFoundErrorSchema.model_validate_json(response.text)
 
         assertion_status_code(response.status_code, HTTPStatus.NOT_FOUND)

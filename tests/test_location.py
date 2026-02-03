@@ -68,6 +68,7 @@ class TestLocation:
     @pytest.mark.parametrize("ids", [[1,2,3], (1,2,3)])
     def test_get_multiple_locations(self, location_client, ids):
         response = location_client.get_multiple_locations(ids)
+        print(response.text)
         response_data = GetMultipleLocationsResponseSchema.model_validate_json(response.text)
 
         assertion_status_code(response.status_code, HTTPStatus.OK)
@@ -85,6 +86,7 @@ class TestLocation:
     def test_get_all_locations_with_wrong_params(self, location_client, query_params):
         query = QueryParamsGetAllLocationsRequestSchema(**query_params)
         response = location_client.get_all_locations(query)
+        print(response.text)
         response_data = NotFoundErrorSchema.model_validate_json(response.text)
 
         assertion_status_code(response.status_code, HTTPStatus.NOT_FOUND)

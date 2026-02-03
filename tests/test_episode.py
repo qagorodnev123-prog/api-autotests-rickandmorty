@@ -57,6 +57,7 @@ class TestEpisode:
     @allure.title("Trying get non-existent episode")
     def test_negative_get_single_episode(self, episode_client, non_existent_episode_id):
         response = episode_client.get_one_episode(non_existent_episode_id)
+        print(response.text)
         response_data = NotFoundErrorSchema.model_validate_json(response.text)
 
         assertion_status_code(response.status_code, HTTPStatus.NOT_FOUND)
@@ -84,6 +85,7 @@ class TestEpisode:
     def test_get_all_episodes_with_wrong_params(self, episode_client, query_params):
         query = QueryParamsGetAllEpisodesRequestSchema(**query_params)
         response = episode_client.get_all_episodes(query)
+        print(response.text)
         response_data = NotFoundErrorSchema.model_validate_json(response.text)
 
         assertion_status_code(response.status_code, HTTPStatus.NOT_FOUND)
